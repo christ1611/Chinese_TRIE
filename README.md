@@ -49,4 +49,4 @@ Inside the file, the format of the input is pinyin, then hanzi in one line. Howe
 
 In model file, each note is saved in two lines with format:
 First line:(The level of the nodes) (the length of the word)
-Second line: the combination of (hanzi conde) (predictictio score). the total of this combination in this line should be same (the the length of the word)
+Second line: the combination of (hanzi conde) (predictiction score). the total of this combination in this line should be same (the the length of the word)
