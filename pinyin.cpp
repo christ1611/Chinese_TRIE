@@ -14,9 +14,6 @@
 #                Weighting and sorting the hanzi prediction
 #
 #Author        : Hotama Christianus Frederick
-#Project       : SLM - 논리 고도화 (redmine 10054,10095)
-#Version       : v2.0
-#Update        : The TRIE Scoring system
 ######################################################################################
 */
 #include <bits/stdc++.h>
