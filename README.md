@@ -3,6 +3,7 @@ this program will minimize the amount of time in Chinese Language auto completio
 
 
 Background: 
+
 TRIE is an example of a digital tree. It is commonly used for the auto-prediction and auto complete features on the mobile keyboard — each node in the tree store a dynamic set or associative array of the string. In other words, the tree defines the key which it is associated in the language programming. TRIE can be seen as an efficient concept of the information retrieval concept.
 
 Chinese is the most complicated language in the word. There is more than 50.000 Chinese characters that have been used in history. Fortunately, due to the simplification, the modern, the number of the Chinese character has been reduced, and around 20.000 Chinese characters that are using nowadays. The native Chinese speaker usually only recognizes 8.000 characters. However, understanding at least 3.000 Chinese character is enough for us to understand the newspaper. Since many words have a similar pronunciation in the Chinese language, the tone is critical since the different intonation can lead to different meaning. There is five type of the intonations in the Chinese: high and level, rises moderately, fall and rises, start high and drop and neutral.
