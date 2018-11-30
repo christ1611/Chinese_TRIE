@@ -42,3 +42,13 @@ Type 3: This feature will return the recommendation of the next character based 
 Type 4: This feature will return the words from the given sentence.
 
 Type 5: Exit and save the model.
+
+Note:
+The sample sentences was taken from the Sogou dictionary
+The format of the Sample sentence should be: documentscore_filename, the document score is used for the rangking of the prediction
+Inside the file, the format of the input is pinyin, then hanzi in one line. However for this program, we only use the hanzi part as the input.
+
+In model file, each note is saved in two lines with format:
+First line:(The level of the nodes) (the length of the word)
+Second line: the combination of (hanzi conde) (predictictio score). the total of this combination in this line should be same (the the length of the word)
+
