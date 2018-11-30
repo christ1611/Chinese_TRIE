@@ -13,7 +13,8 @@
 #                Updating the TRIE and reccomendation score based on the user input or preferences
 #                Weighting and sorting the hanzi prediction
 #
-#Author        : Hotama Christianus Frederick
+#Author         : Hotama Christianus Frederick
+#Commit		: November 2018
 ######################################################################################
 */
 #include <bits/stdc++.h>
@@ -754,7 +755,7 @@ int main()
         else
         {
   		/* could not open directory */
-            perror ("Please copy the sampple file to the folder");
+            perror ("Please copy the sample file to the folder");
         }
         j=i;
         line="";
@@ -1030,7 +1031,7 @@ int main()
         mydum_str = std::to_string(nyetak[i].first) + " ";
 
         vector <prediction> mydum = nyetak[i].second;
-        mydum_str=mydum_str+ std::to_string(mydum.size()) + " ";
+        mydum_str=mydum_str+ std::to_string(mydum.size()) + "\n";
         for (j=0;j<mydum.size();j++)
         {
             vector <int> dummyku=mydum[j].hanzi_code;
@@ -1045,7 +1046,7 @@ int main()
     }
     t2=clock();
     diff2=(((float)t2-(float)t1)/CLOCKS_PER_SEC);
-    cout<<"saving time"<<diff2<<endl;
+    cout<<"saving time "<<diff2<<endl;
 	return 0;
 
 }
