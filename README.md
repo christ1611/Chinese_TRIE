@@ -17,29 +17,28 @@ Represent chinese in TRIE
 Same with the English TRIE, the first level of Chinese TRIE is represent the first character of the word, the second level of Chinese TRIE is represent the second character of the word and so on. Since one character in Chinese character contain two parts of pinyin (Consonant and vocal), one character represented by two layer, and the hanzis are saved in the vocal parts. 
 
 Pre requiments:
-1. The operating system must be
-2.  Ubuntu 16.04 or advanced
+1. The operating system must be Ubuntu 16.04 or advanced
 3. The memory need to be at least 4 GB
 4. The Gcc version need to be at least v 4.6.2 or advanced, other c++ compiler that can support C++ ISO 2011 (std c++11) also can be used to build this tool.
 
 Run the program
 1. Move the terminal directory into the folder which contain the tools.
 2. To compile the program, type this in your console:
-	 G++ -std=c++11 –otrie pinyin.cpp
+	 g++ -std=c++11 –otrie pinyin.cpp
 3. To run the program, type this in your console
-  ./trie
+  	./trie
   
 Features of Chinese TRIE
 
-Type 0: Insert the new phrase or updating the prediction score. 
+Type 0: Insert the new phrase or updating the prediction score. (input must be hanzi)
 
-Type 1: This feature will return the list of the Hanzi based on the given pinyin.
+Type 1: This feature will return the list of the Hanzi based on the given pinyin.(input must be pinyin)
 
-Type 2: This feature will return the pinyin translation based on the given hanzi.
+Type 2: This feature will return the pinyin translation based on the given hanzi. (input must be hanzi)
 
-Type 3: This feature will return the recommendation of the next character based on the given hanzi.
+Type 3: This feature will return the recommendation of the next character based on the given hanzi. (input must be hanzi)
 
-Type 4: This feature will return the words from the given sentence.
+Type 4: This feature will return the words from the given sentence. (input must be hanzi, then the computer will ask whether you want to update the score or not)
 
 Type 5: Exit and save the model.
 
@@ -51,4 +50,3 @@ Inside the file, the format of the input is pinyin, then hanzi in one line. Howe
 In model file, each note is saved in two lines with format:
 First line:(The level of the nodes) (the length of the word)
 Second line: the combination of (hanzi conde) (predictictio score). the total of this combination in this line should be same (the the length of the word)
-
