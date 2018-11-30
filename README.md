@@ -30,6 +30,7 @@ Run the program
   ./trie
   
 Features of Chinese TRIE
+
 Type 0: Insert the new phrase or updating the prediction score. 
 Type 1: This feature will return the list of the Hanzi based on the given pinyin.
 Type 2: This feature will return the pinyin translation based on the given hanzi.
