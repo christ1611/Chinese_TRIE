@@ -32,8 +32,13 @@ Run the program
 Features of Chinese TRIE
 
 Type 0: Insert the new phrase or updating the prediction score. 
+
 Type 1: This feature will return the list of the Hanzi based on the given pinyin.
+
 Type 2: This feature will return the pinyin translation based on the given hanzi.
+
 Type 3: This feature will return the recommendation of the next character based on the given hanzi.
-Type 4: This feature will return the words from the given sentence
-Type 5: Exit and save the model
+
+Type 4: This feature will return the words from the given sentence.
+
+Type 5: Exit and save the model.
