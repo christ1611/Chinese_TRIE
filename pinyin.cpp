@@ -1,65 +1,31 @@
-#include "pinyin.h"
+/*
+#####################################################################################
+#Program name  : pinyin.cpp
+#Description   : Make the TRIE based on chinese Pinyin character
+#                Real time training model of chinese-hanzi prediction model
+#                Training The TRIE to understand the hanzi-Pinyin Relation
+#                Training the TRIE to give the prediction for the next given hanzi
+#                Training the TRIE to give the prediction based on the uncompleted pinyin
+#                   (ex:nih -> 你好/nihao)
+#                Training the TRIE to give the prediction based on given consonant only
+#                   (ex:ALBB -> 阿里巴巴(Alibaba))
+#                Build a adaptive TRIE Initizilation based on the Sogou dataset
+#                Updating the TRIE and reccomendation score based on the user input or preferences
+#                Weighting and sorting the hanzi prediction
+#
+#Copyright     : Distribution, modification, reproduction, and copy are strictly prohibited to unauthorized persons.
+#Author        : Hotama Christianus Frederick (christianusfrederick@gmail.com)
+#Commit date   : December 2018
+######################################################################################
+*/
 
-const int ALPHABET_SIZE = 35;
-//search the directory
+#include "pinyin.h"
+#include "Variable.h"
 std::string GetCurrentWorkingDir( void ) {
   char buff[FILENAME_MAX];
   GetCurrentDir( buff, FILENAME_MAX );
   std::string current_working_dir(buff);
   return current_working_dir;
-}
-
-// trie node
-bool sortbysec(const pair<int,int> &a, const pair<int,int> &b)
-{
-    return (a.second < b.second);
-}
-struct words
-{
-    string key_hanzi;
-    vector <int> hanzi_code;
-    double score;
-    int end_of_word;
-};
-struct prediction
-{
-    double score;
-    string hanzi_list;
-    vector<int> hanzi_code;
-    int end_of_word;
-    bool operator<(const prediction& rhs) const
-    {
-        return score > rhs.score;
-    }
-};
-struct TrieNode
-{
-	struct TrieNode *children[ALPHABET_SIZE];
-    vector <pair<string,string>> pinyin_char;
-	// isEndOfWord is true if the node represents
-	// end of a word
-	bool isEndOfWord;
-	vector <prediction> scoring;
-	int k;
-
-};
-void readTrie(istream& is, vector<prediction> &vec)
-{
-    typename vector<prediction>::size_type size = 0;
-    is.read((char*)&size, sizeof(size));
-    vec.resize(size);
-    is.read((char*)&vec, vec.size() * sizeof(prediction));
-}
-// Returns new trie node (initialized to NULLs)
-struct TrieNode *getNode(void)
-{
-	struct TrieNode *pNode = new TrieNode;
-	pNode->isEndOfWord = false;
-    pNode->k=0;
-	for (int i = 0; i < ALPHABET_SIZE; i++)
-		pNode->children[i] = NULL;
-
-	return pNode;
 }
 int find_hanzi(vector <string> arr, int len, std::string seek)
 {
@@ -106,7 +72,38 @@ int find_hanzi_code(struct TrieNode *root, vector <int> current_pinyin, std::str
         return root->pinyin_char.size();
 }
 
+void insert2(struct TrieNode *root, vector<words> hanzi, vector<int> key_pinyin)
+{
+    //insert from the model file
+	struct TrieNode *pCrawl = root;
+	prediction dummy;
+	int tmp,tmp2;
+	vector <string> dummy_hanzi;
+	std::string buffer;
+	int panjang;
+	prediction scores;
+	double feedback;
+	string key_hanzi =hanzi[0].key_hanzi;
+	for (int i = 0; i < (key_hanzi.length()/3)*2; i++)
+	{
+	    int index=key_pinyin[i];
+        if (!pCrawl->children[index])
+            pCrawl->children[index] = getNode();
 
+        pCrawl = pCrawl->children[index];
+	}
+
+	for (int i = 0; i<hanzi.size(); i++)
+	{
+	    scores.hanzi_code=hanzi[i].hanzi_code;
+	    scores.hanzi_list=hanzi[i].key_hanzi;
+	    scores.score=hanzi[i].score;
+
+	    pCrawl->scoring.push_back(scores);
+	}
+	// mark last node as leaf
+    return;
+}
 
 void insert(struct TrieNode *root, string key_hanzi, vector<int> key_pinyin, double score, bool updating, int dictionary)
 {
