@@ -1,6 +1,6 @@
 /*
 #####################################################################################
-#Program name  : TRIE model for chineze-Hanzi Pinyin Prediction
+#Program name  : pinyin.h
 #Description   : All the library that needed in pinyin.cpp
 #
 #Author        : Hotama Christianus Frederick
