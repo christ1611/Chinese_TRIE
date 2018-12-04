@@ -2,8 +2,8 @@
 #####################################################################################
 #Program name  : pinyin.h
 #Description   : All the library that needed in pinyin.cpp
-#
-#Author        : Hotama Christianus Frederick
+#Copyright     : Distribution, modification, reproduction, and copy are strictly prohibited to unauthorized persons.
+#Author        : Hotama Christianus Frederick (christianusfrederick@gmail.com)
 #Commit date   : December 2018
 ######################################################################################
 */
