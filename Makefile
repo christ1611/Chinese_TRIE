@@ -1,8 +1,14 @@
 all: pinyin 
-pinyin: pinyin.o
-	g++ -std=c++11 pinyin.o -o pinyin
+pinyin: main.o
+	@echo 'Building target: $@'
+	@echo 'Invoking: MinGW C++ Linker'
+	g++ -std=c++11 main.o -o pinyin
+	@echo 'Finished building target: $@'
+	@echo ' '
 
-pinyin.o: pinyin.cpp
-	g++ -std=c++11 -c pinyin.cpp
+main.o: main.cpp
+	g++ -std=c++11 -c main.cpp
+
 clean: 
-	rm -rf *o pinyin
+	-$(RM) $(CC_DEPS)$(C++_DEPS)$(EXECUTABLES)$(OBJS)$(C_UPPER_DEPS)$(CXX_DEPS)$(CPP_DEPS)$(C_DEPS) pinyin
+	-@echo ' '
