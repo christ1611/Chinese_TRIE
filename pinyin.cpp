@@ -1,47 +1,4 @@
-/*
-#####################################################################################
-#Program name  : TRIE model for chineze-Hanzi Pinyin Prediction
-#Description   : Make the TRIE based on chinese Pinyin character
-#                Real time training model of chinese-hanzi prediction model
-#                Training The TRIE to understand the hanzi-Pinyin Relation
-#                Training the TRIE to give the prediction for the next given hanzi
-#                Training the TRIE to give the prediction based on the uncompleted pinyin
-#                   (ex:nih -> 你好/nihao)
-#                Training the TRIE to give the prediction based on given consonant only
-#                   (ex:ALBB -> 阿里巴巴(Alibaba))
-#                Build a adaptive TRIE Initizilation based on the Sogou dataset
-#                Updating the TRIE and reccomendation score based on the user input or preferences
-#                Weighting and sorting the hanzi prediction
-#
-#Author         : Hotama Christianus Frederick
-#Commit		: November 2018
-######################################################################################
-*/
-#include <bits/stdc++.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sys/types.h>
-#include <dirent.h>
-#include <tuple>
-#include <errno.h>
-#include <vector>
-#include <sstream>
-#include <codecvt>
-#include <iconv.h>
-#include <numeric>
-#include <algorithm>
-#include <time.h>
-#include <stdio.h>  /* defines FILENAME_MAX */
-// #define WINDOWS  /* uncomment this line to use it for windows.*/
-#ifdef WINDOWS
-#include <direct.h>
-#define GetCurrentDir _getcwd
-#else
-#include <unistd.h>
-#define GetCurrentDir getcwd
-#endif
-using namespace std;
+#include "pinyin.h"
 
 const int ALPHABET_SIZE = 35;
 //search the directory
@@ -62,12 +19,14 @@ struct words
     string key_hanzi;
     vector <int> hanzi_code;
     double score;
+    int end_of_word;
 };
 struct prediction
 {
     double score;
     string hanzi_list;
     vector<int> hanzi_code;
+    int end_of_word;
     bool operator<(const prediction& rhs) const
     {
         return score > rhs.score;
@@ -147,38 +106,7 @@ int find_hanzi_code(struct TrieNode *root, vector <int> current_pinyin, std::str
         return root->pinyin_char.size();
 }
 
-void insert2(struct TrieNode *root, vector<words> hanzi, vector<int> key_pinyin)
-{
-    //insert from the model file
-	struct TrieNode *pCrawl = root;
-	prediction dummy;
-	int tmp,tmp2;
-	vector <string> dummy_hanzi;
-	std::string buffer;
-	int panjang;
-	prediction scores;
-	double feedback;
-	string key_hanzi =hanzi[0].key_hanzi;
-	for (int i = 0; i < (key_hanzi.length()/3)*2; i++)
-	{
-	    int index=key_pinyin[i];
-        if (!pCrawl->children[index])
-            pCrawl->children[index] = getNode();
 
-        pCrawl = pCrawl->children[index];
-	}
-
-	for (int i = 0; i<hanzi.size(); i++)
-	{
-	    scores.hanzi_code=hanzi[i].hanzi_code;
-	    scores.hanzi_list=hanzi[i].key_hanzi;
-	    scores.score=hanzi[i].score;
-
-	    pCrawl->scoring.push_back(scores);
-	}
-	// mark last node as leaf
-    return;
-}
 
 void insert(struct TrieNode *root, string key_hanzi, vector<int> key_pinyin, double score, bool updating, int dictionary)
 {
@@ -206,6 +134,10 @@ void insert(struct TrieNode *root, string key_hanzi, vector<int> key_pinyin, dou
             int ketemu;
             dummy.score=score;
             dummy.hanzi_list=key_hanzi.substr(0,panjang);
+            if (dummy.hanzi_list==key_hanzi)
+                dummy.end_of_word=1;
+            else
+                dummy.end_of_word=0;
             dummy_hanzi.clear();
             for (int j=0; j<pCrawl->scoring.size();j++)
                 dummy_hanzi.push_back(pCrawl->scoring[j].hanzi_list);
@@ -224,6 +156,7 @@ void insert(struct TrieNode *root, string key_hanzi, vector<int> key_pinyin, dou
                     pinyin_dum=con_consonant[key_pinyin[i-1]]+con_vocal[key_pinyin[i]];
                     root->pinyin_char.push_back(make_pair(pinyin_dum,key_hanzi.substr(panjang-3,3)));
                 }
+
 
                 pCrawl->scoring.push_back(dummy);
                 pCrawl->isEndOfWord = true;
@@ -276,7 +209,6 @@ vector<pair<int,vector<prediction>>> cetak(struct TrieNode *root,int level)
                 {
                     pCrawl_vocal=pCrawl_const->children[j];
                     buffer=consonant[i]+vocal[j];
-
                     savefile.push_back(make_pair(level,pCrawl_vocal->scoring));
                     new_buffer=cetak(pCrawl_vocal,level+1);
                     for (int i=0;i<new_buffer.size();i++)
@@ -866,18 +798,21 @@ int main()
 
             panjang_pinyin= std::stoi(read_dum[i]);
             i=i+1;
-            a=a+1;
             if (a%500000==0)
                 cout<<"Reading from the line "<<a<<endl;
+            a=a+1;
+
             panjang_bilangan=std::stoi(read_dum[i]);
             i=i+1;
             vector <words> hanzi_list;
             hanzi_list.clear();
             words dummy_words;
+
             for (int j=0;j<panjang_bilangan;j++)
             {
                 hanzi_dummy="";
                 vector <int> hanzi_code;
+
                 for (int k=0;k<panjang_pinyin;k++)
                 {
                     int dummm=std::stoi(read_dum[i]);
@@ -890,14 +825,15 @@ int main()
                 dummy_words.score=std::stod(read_dum[i]);
                 dummy_words.hanzi_code=hanzi_code;
                 hanzi_list.push_back(dummy_words);
-
+                if (j==0)
+                {
+                    listpinyin=find_pinyin(root->pinyin_char,root->pinyin_char.size(),hanzi_dummy);
+                //insert2(root,hanzi_list,listpinyin);
+                }
+                insert(root,hanzi_dummy,listpinyin,dummy_words.score,false,0);
                 i=i+1;
             }
-            if (panjang_bilangan>0)
-            {
-                listpinyin=find_pinyin(root->pinyin_char,root->pinyin_char.size(),hanzi_list[0].key_hanzi);
-                insert2(root,hanzi_list,listpinyin);
-            }
+
         }
     }
 
@@ -1025,24 +961,41 @@ int main()
     for (i=0;i<nyetak.size();i++)
     {
         ofstream myfile;
-        string mydum_str;
-        myfile.open ("model.txt",fstream::app);
+        string mydum_str,mydum_str2;
+
 
         mydum_str = std::to_string(nyetak[i].first) + " ";
 
         vector <prediction> mydum = nyetak[i].second;
-        mydum_str=mydum_str+ std::to_string(mydum.size()) + "\n";
+        //mydum_str=mydum_str+ std::to_string(mydum.size()) + "\n";
+        bool dec_print=false;
+        int array_sizes=0;
         for (j=0;j<mydum.size();j++)
         {
-            vector <int> dummyku=mydum[j].hanzi_code;
-            for (k=0;k<dummyku.size();k++)
-                mydum_str=mydum_str+ to_string(dummyku[k])+" ";
-            mydum_str=mydum_str+std::to_string(mydum[j].score)+" ";
+
+            if (mydum[j].end_of_word==1)
+            {
+                array_sizes=array_sizes+1;
+                dec_print=true;
+                vector <int> dummyku=mydum[j].hanzi_code;
+                for (k=0;k<dummyku.size();k++)
+                    mydum_str2=mydum_str2+ to_string(dummyku[k])+" ";
+                mydum_str2=mydum_str2+std::to_string(mydum[j].score)+" ";
+            }
+
+        }
+        mydum_str=mydum_str+ to_string(array_sizes) + "\n";
+        if (dec_print)
+        {
+             myfile.open ("model.txt",fstream::app);
+
+             mydum_str2= mydum_str2+"\n";
+             myfile << mydum_str;
+             myfile << mydum_str2;
+            myfile.close();
         }
 
-        mydum_str= mydum_str+"\n";
-        myfile << mydum_str;
-        myfile.close();
+
     }
     t2=clock();
     diff2=(((float)t2-(float)t1)/CLOCKS_PER_SEC);
