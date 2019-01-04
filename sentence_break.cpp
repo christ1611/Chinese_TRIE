@@ -19,6 +19,7 @@ vector <string> sentence_break(struct TrieNode *root, vector <int> key_pinyin, s
     string dummy=hanzi.substr(pointer,3);
     string prediction;
     int i=0;
+    int a;
     int index;
     bool ketemu=false;
 
@@ -26,6 +27,10 @@ vector <string> sentence_break(struct TrieNode *root, vector <int> key_pinyin, s
     pCrawl=root;
     while (i<key_pinyin.size())
     {
+        a=a+1;
+        //solve the issue if it reach the runtime error (in case the conflict between traditional and simplified chinese)
+        if (a>50)
+            break;
         index=key_pinyin[i];
         if (pCrawl->children[index])
         {
